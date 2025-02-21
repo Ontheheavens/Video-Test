@@ -85,14 +85,10 @@ fun VideosListScreen(
         } else if (videos.isEmpty()) {
             CenteredText(text = "Loading...")
         } else {
-            LazyColumn {
-                items(videos) { video ->
-                    VideoCard(
-                        onVideoSelected = onVideoSelected,
-                        video = video
-                    )
-                }
-            }
+            VideosList(
+                videos = videos,
+                onVideoSelected = onVideoSelected
+            )
         }
 
         PullToRefreshDefaults.Indicator(
@@ -101,7 +97,21 @@ fun VideosListScreen(
             state = pullToRefreshState
         )
     }
+}
 
+@Composable
+fun VideosList(
+    videos: List<VideoEntity>,
+    onVideoSelected: (VideoEntity) -> Unit
+) {
+    LazyColumn {
+        items(videos) { video ->
+            VideoCard(
+                onVideoSelected = onVideoSelected,
+                video = video
+            )
+        }
+    }
 }
 
 @Composable

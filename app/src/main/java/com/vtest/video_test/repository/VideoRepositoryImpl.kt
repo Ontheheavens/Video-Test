@@ -12,14 +12,26 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface VideoRepository {
+
+    fun fetchVideos(): Flow<List<VideoEntity>>
+
+    suspend fun saveVideo(video: VideoEntity)
+
+    suspend fun getSavedVideo(videoUrl: String): VideoEntity?
+
+    suspend fun updatePlaybackPosition(videoUrl: String, position: Long)
+
+}
+
 @Singleton
-class VideoRepository @Inject constructor(
+class VideoRepositoryImpl @Inject constructor(
     private val videoApi: DummyVideoAPI,
     private val videoDao: VideoDAO
-) {
+): VideoRepository {
 
     // We differentiate between API data and DB data to divide responsibilities.
-    fun fetchVideos(): Flow<List<VideoEntity>> = flow {
+    override fun fetchVideos(): Flow<List<VideoEntity>> = flow {
         val localVideos = videoDao.getAllVideos().associateBy { it.id }
         emit(localVideos.values.toList())
 
@@ -39,15 +51,15 @@ class VideoRepository @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun saveVideo(video: VideoEntity) {
+    override suspend fun saveVideo(video: VideoEntity) {
         videoDao.insertOrUpdateVideos(listOf(video))
     }
 
-    suspend fun getSavedVideo(videoUrl: String): VideoEntity? {
+    override suspend fun getSavedVideo(videoUrl: String): VideoEntity? {
         return videoDao.getVideo(videoUrl)
     }
 
-    suspend fun updatePlaybackPosition(videoUrl: String, position: Long) {
+    override suspend fun updatePlaybackPosition(videoUrl: String, position: Long) {
         videoDao.updatePlaybackPosition(videoUrl, position)
     }
 }

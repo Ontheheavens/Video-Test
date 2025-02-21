@@ -1,11 +1,10 @@
 package com.vtest.video_test.ui.viewmodels
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vtest.video_test.database.entity.VideoEntity
-import com.vtest.video_test.model.VideoData
 import com.vtest.video_test.repository.VideoRepository
+import com.vtest.video_test.repository.VideoRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -37,10 +36,6 @@ class VideoViewModel @Inject constructor(
         return withContext(Dispatchers.IO) {
             repository.getSavedVideo(videoUrl)?.lastPosition ?: 0L
         }
-    }
-
-    init {
-        fetchVideos()
     }
 
     fun fetchVideos(): Job {

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.vtest.video_test.api.DummyVideoAPI
 import com.vtest.video_test.database.AppDatabase
 import com.vtest.video_test.repository.VideoRepository
+import com.vtest.video_test.repository.VideoRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,7 +69,7 @@ object NetworkModule {
         @ApplicationContext context: Context
     ): VideoRepository {
         val dao = AppDatabase.getDatabase(context).videoDao()
-        return VideoRepository(videoApi = videoAPI, videoDao = dao)
+        return VideoRepositoryImpl(videoApi = videoAPI, videoDao = dao)
     }
 
 }
